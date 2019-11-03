@@ -33,6 +33,7 @@ func main() {
 	}
 	defer db.Close()
 	db.SetMaxOpenConns(maxConnections / numInstance)
+	db.SetConnMaxLifetime(0)
 
 	hakaruHandler := func(w http.ResponseWriter, r *http.Request) {
 		stmt, e := db.Prepare("INSERT INTO eventlog(at, name, value) values(NOW(), ?, ?)")

@@ -20,3 +20,7 @@ EnvironmentFile=/etc/sysconfig/hakaru
 
 [Install]
 WantedBy=multi-user.target
+
+[Manager]
+DefaultLimitNOFILE=1006500
+DefaultLimitNPROC=1006500

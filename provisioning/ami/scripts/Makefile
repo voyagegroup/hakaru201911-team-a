@@ -25,6 +25,9 @@ yum:
 /root/hakaru/Makefile: Makefile /root/hakaru
 	cp Makefile /root/hakaru/Makefile
 
+/etc/security/limits.conf: limits.conf
+	cp limits.conf /etc/security/limits.conf
+
 app: /root/hakaru/Makefile
 
 # application deployment

@@ -4,7 +4,7 @@
 #
 .PHONY: all cloud-config yum app
 
-all: cloud-config yum app
+all: cloud-config yum app /etc/security/limits.conf
 
 cloud-config: cloud.cfg.d/99_defaults.cfg
 	cp cloud.cfg.d/99_defaults.cfg /etc/cloud/cloud.cfg.d/

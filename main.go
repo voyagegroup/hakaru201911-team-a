@@ -9,9 +9,13 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
+	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
 
 func main() {
+	tracer.Start(tracer.WithServiceName("test-go"))
+	defer tracer.Stop()
 	dataSourceName := os.Getenv("HAKARU_DATASOURCENAME")
 	if dataSourceName == "" {
 		dataSourceName = "root:password@tcp(127.0.0.1:13306)/hakaru"
@@ -52,11 +56,14 @@ func main() {
 		w.Header().Set("Access-Control-Allow-Methods", "GET")
 	}
 
-	http.HandleFunc("/hakaru", hakaruHandler)
-	http.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(200) })
+	mux := httptrace.NewServeMux()
+	mux.HandleFunc("/hakaru", hakaruHandler)
+	// http.HandleFunc("/hakaru", hakaruHandler)
+	// http.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(200) })
+	mux.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(200) })
 
 	// start server
-	if err := http.ListenAndServe(":8081", nil); err != nil {
+	if err := http.ListenAndServe(":8081", mux); err != nil {
 		log.Fatal(err)
 	}
 }

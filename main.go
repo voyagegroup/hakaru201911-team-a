@@ -6,6 +6,7 @@ import (
 
 	"os"
 
+	"github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
 	sqltrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/database/sql"
 	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
@@ -24,9 +25,9 @@ func main() {
 	maxConnections := 66
 	numInstance := 10
 
+	sqltrace.Register("mysql", &mysql.MySQLDriver{}, sqltrace.WithServiceName("my-db"))
 	db, err := sqltrace.Open("mysql", dataSourceName)
 	if err != nil {
-		db.Close()
 		panic(err.Error())
 	}
 	defer db.Close()

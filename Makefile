@@ -56,3 +56,10 @@ ARTIFACTS_BUCKET := $(AWS_PROFILE)-hakaru-artifacts
 upload: clean artifacts.tgz
 	aws s3 cp artifacts.tgz s3://$(ARTIFACTS_BUCKET)/latest/artifacts.tgz
 	aws s3 cp artifacts.tgz s3://$(ARTIFACTS_BUCKET)/$$(git rev-parse HEAD)/artifacts.tgz
+
+
+INSTANCE_IDS ?= $(shell aws --profile $(AWS_PROFILE) ec2 describe-instances --output text --filters "Name=tag:Name,Values=Hakaru server with datadog" "Name=instance-state-name,Values=running" --query 'Reservations[].Instances[].[InstanceId][]' | sed -e "s/\s\+/ /g")
+
+version:
+	echo $(INSTANCE_IDS) | xargs -P4 -d' ' -I{} ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ./id_rsa ec2-user@{} 'curl -sS 127.0.0.1:8081/ok'
+

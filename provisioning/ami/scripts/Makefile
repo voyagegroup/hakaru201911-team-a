@@ -4,7 +4,7 @@
 #
 .PHONY: all cloud-config yum app
 
-all: cloud-config yum app
+all: cloud-config yum app /etc/security/limits.conf
 
 cloud-config: cloud.cfg.d/99_defaults.cfg
 	cp cloud.cfg.d/99_defaults.cfg /etc/cloud/cloud.cfg.d/
@@ -25,6 +25,9 @@ yum:
 
 /root/hakaru/Makefile: Makefile /root/hakaru
 	cp Makefile /root/hakaru/Makefile
+
+/etc/security/limits.conf: limits.conf
+	cp limits.conf /etc/security/limits.conf
 
 app: /root/hakaru/Makefile
 

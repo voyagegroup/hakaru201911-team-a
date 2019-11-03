@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -61,7 +62,10 @@ func main() {
 	mux.HandleFunc("/hakaru", hakaruHandler)
 	// http.HandleFunc("/hakaru", hakaruHandler)
 	// http.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(200) })
-	mux.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(200) })
+	mux.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(200)
+		fmt.Fprintln(w, "v1")
+	})
 
 	// start server
 	if err := http.ListenAndServe(":8081", mux); err != nil {

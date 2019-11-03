@@ -17,11 +17,16 @@ func main() {
 		dataSourceName = "root:password@tcp(127.0.0.1:13306)/hakaru"
 	}
 
+	maxConnections := 66
+	numInstance := 10
+
 	db, err := sql.Open("mysql", dataSourceName)
 	if err != nil {
+		db.Close()
 		panic(err.Error())
 	}
 	defer db.Close()
+	db.SetMaxOpenConns(maxConnections / numInstance)
 
 	hakaruHandler := func(w http.ResponseWriter, r *http.Request) {
 		stmt, e := db.Prepare("INSERT INTO eventlog(at, name, value) values(NOW(), ?, ?)")

@@ -18,7 +18,7 @@ yum:
 	yum -y install java-1.8.0-openjdk
 	yum -y install https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
 	yum -y install https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
-    DD_API_KEY=0c0b6fb2234aabe7865f36ea4776d553 bash -c "$$(curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh)"
+	DD_API_KEY=0c0b6fb2234aabe7865f36ea4776d553 bash -c "$$(curl -L https://raw.githubusercontent.com/DataDog/datadog-agent/master/cmd/agent/install_script.sh)"
 
 /root/hakaru:
 	mkdir -p /root/hakaru

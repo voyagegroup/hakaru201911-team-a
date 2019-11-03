@@ -9,3 +9,6 @@ _deploy
 *.zip
 
 /db/data
+
+id_rsa
+

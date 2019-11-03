@@ -4,11 +4,10 @@ import (
 	"log"
 	"net/http"
 
-	"database/sql"
-
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	sqltrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/database/sql"
 	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
@@ -16,6 +15,7 @@ import (
 func main() {
 	tracer.Start(tracer.WithServiceName("test-go"))
 	defer tracer.Stop()
+
 	dataSourceName := os.Getenv("HAKARU_DATASOURCENAME")
 	if dataSourceName == "" {
 		dataSourceName = "root:password@tcp(127.0.0.1:13306)/hakaru"
@@ -24,7 +24,7 @@ func main() {
 	maxConnections := 66
 	numInstance := 10
 
-	db, err := sql.Open("mysql", dataSourceName)
+	db, err := sqltrace.Open("mysql", dataSourceName)
 	if err != nil {
 		db.Close()
 		panic(err.Error())

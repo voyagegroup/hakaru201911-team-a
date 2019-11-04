@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"os"
 
 	"github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
 	sqltrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/database/sql"
+	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
 
@@ -57,29 +57,17 @@ func main() {
 		w.Header().Set("Access-Control-Allow-Methods", "GET")
 	}
 
-	//mux := httptrace.NewServeMux()
-	//mux.HandleFunc("/hakaru", hakaruHandler)
-	http.HandleFunc("/hakaru", hakaruHandler)
-
-	http.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) {
+	mux := httptrace.NewServeMux()
+	mux.HandleFunc("/hakaru", hakaruHandler)
+	// http.HandleFunc("/hakaru", hakaruHandler)
+	// http.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(200) })
+	mux.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
-		fmt.Fprintln(w, "Set keep alive")
+		fmt.Fprintln(w, "v1")
 	})
 
 	// start server
-	s := &http.Server{
-		Addr:           ":8081",
-		Handler:        nil,
-		ReadTimeout:    30 * time.Second,
-		WriteTimeout:   30 * time.Second,
-		IdleTimeout:    80 * time.Second,
-		MaxHeaderBytes: 1 << 20,
-	}
-	s.SetKeepAlivesEnabled(true)
-
-	log.Fatal(s.ListenAndServe())
-	//if err := http.ListenAndServe(":8081", mux); err != nil {
-	if err := s.ListenAndServe(); err != nil {
+	if err := http.ListenAndServe(":8081", mux); err != nil {
 		log.Fatal(err)
 	}
 }

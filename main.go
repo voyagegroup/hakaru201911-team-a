@@ -86,6 +86,7 @@ func main() {
 	maxConnections := 66
 	numInstance := 15
 	db.SetMaxOpenConns(maxConnections / numInstance)
+	db.SetConnMaxLifetime(0)
 
 	resc := make(chan EventLog, 200000)
 

@@ -10,9 +10,11 @@ import (
 
 	"os"
 
+    "github.com/go-sql-driver/mysql"
 	"github.com/carlescere/scheduler"
 	_ "github.com/go-sql-driver/mysql"
 	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
+    sqltrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/database/sql"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
 
@@ -74,7 +76,8 @@ func main() {
 		dataSourceName = "root:password@tcp(127.0.0.1:13306)/hakaru"
 	}
 
-	db, err := sql.Open("mysql", dataSourceName)
+    sqltrace.Register("mysql", &mysql.MySQLDriver{}, sqltrace.WithServiceName("my-db"))
+    db, err := sqltrace.Open("mysql", dataSourceName)
 	if err != nil {
 		panic(err.Error())
 	}

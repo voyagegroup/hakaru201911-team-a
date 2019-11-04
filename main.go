@@ -24,7 +24,7 @@ func main() {
 	}
 
 	maxConnections := 66
-	numInstance := 10
+	numInstance := 15
 
 	sqltrace.Register("mysql", &mysql.MySQLDriver{}, sqltrace.WithServiceName("my-db"))
 	db, err := sqltrace.Open("mysql", dataSourceName)
